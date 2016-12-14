@@ -18,5 +18,5 @@ app.get("/campgrounds", function(req, res) {
 });
 
 app.listen(3000, function() {
-	console.log("The YelpCamp Server has started.");
+	console.log("The UkrCamp Server has started.");
 })
