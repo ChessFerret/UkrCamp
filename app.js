@@ -1,9 +1,32 @@
-var express = require("express");
-var app = express();
-var bodyParser = require("body-parser");
+var express 		= require("express"),
+		 app 				= express()
+		 bodyParser = require("body-parser"),
+		 mongoose 	= require("mongoose");
 
+mongoose.connect("mongodb://localhost/ukr_camp");
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
+
+//SCHEMA SETUP
+var campgroundSchema = new mongoose.Schema({
+	name: String,
+	image: String
+});
+
+var Campground = mongoose.model("Campground", campgroundSchema);
+
+Campground.create(
+	{
+		name: "Sofiyivsky Park",
+	 	image: "https://c8.staticflickr.com/1/93/246477439_5ea3e472a0_z.jpg"},
+	 	function(err, campground) {
+	 		if (err) {
+	 			console.log(err);
+	 		} else {
+	 			console.log("Campground added: ");
+	 			console.log(campground);
+	 		}
+	 	});
 
 var campgrounds = [
 		{name: "Sofiyivsky Park", image: "https://c8.staticflickr.com/1/93/246477439_5ea3e472a0_z.jpg"},
