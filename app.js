@@ -15,37 +15,33 @@ var campgroundSchema = new mongoose.Schema({
 
 var Campground = mongoose.model("Campground", campgroundSchema);
 
-Campground.create(
-	{
-		name: "Sofiyivsky Park",
-	 	image: "https://c8.staticflickr.com/1/93/246477439_5ea3e472a0_z.jpg"},
-	 	function(err, campground) {
-	 		if (err) {
-	 			console.log(err);
-	 		} else {
-	 			console.log("Campground added: ");
-	 			console.log(campground);
-	 		}
-	 	});
-
-var campgrounds = [
-		{name: "Sofiyivsky Park", image: "https://c8.staticflickr.com/1/93/246477439_5ea3e472a0_z.jpg"},
-		{name: "Buchansky Park", image: "https://c5.staticflickr.com/7/6186/6090714876_44d269ed7e_z.jpg"},
-		{name: "Pushtcha Voditsa Park", image: "https://c7.staticflickr.com/6/5319/7407436246_0ac54dd559_z.jpg"},
-		{name: "Waterfall", image: "https://farm2.staticflickr.com/1203/1132895352_afd086a60b.jpg"},
-		{name: "Buchansky Park", image: "https://c5.staticflickr.com/7/6186/6090714876_44d269ed7e_z.jpg"},
-		{name: "Pushtcha Voditsa Park", image: "https://c7.staticflickr.com/6/5319/7407436246_0ac54dd559_z.jpg"},
-		{name: "Sofiyivsky Park", image: "https://c8.staticflickr.com/1/93/246477439_5ea3e472a0_z.jpg"},
-		{name: "Buchansky Park", image: "https://c5.staticflickr.com/7/6186/6090714876_44d269ed7e_z.jpg"},
-		{name: "Pushtcha Voditsa Park", image: "https://c7.staticflickr.com/6/5319/7407436246_0ac54dd559_z.jpg"},
-]
+// Campground.create(
+// 	{
+// 		name: "Sofiyivsky Park",
+// 	 	image: "https://c8.staticflickr.com/1/93/246477439_5ea3e472a0_z.jpg"},
+// 	 	function(err, campground) {
+// 	 		if (err) {
+// 	 			console.log(err);
+// 	 		} else {
+// 	 			console.log("Campground added: ");
+// 	 			console.log(campground);
+// 	 		}
+// 	 	});
 
 app.get("/", function(req, res) {
 	res.render("landing");
 });
 
 app.get("/campgrounds", function(req, res) {
-	res.render("campgrounds", {campgrounds: campgrounds});
+	//res.render("campgrounds", {campgrounds: campgrounds});
+	//get all campgrounds from DB
+	Campground.find({}, function(err, allCampgrounds) {
+		if (err) {
+			console.log(err);
+		} else {
+			res.render("campgrounds", {campgrounds: allCampgrounds});
+		}
+	});
 });
 
 app.post("/campgrounds", function(req, res) {
@@ -53,9 +49,14 @@ app.post("/campgrounds", function(req, res) {
 	var name = req.body.name;
 	var image = req.body.image;
 	var newCampground = {name: name, image: image};
-	campgrounds.push(newCampground);
-	//redirect back to campgrounds page
-	res.redirect("/campgrounds");
+	// create a new campground and save it to DB
+	Campground.create(newCampground, function(err, newlyCreated){
+		if (err) {
+			console.log(err);
+		} else {
+			res.redirect("/campgrounds");
+		}
+	});
 });
 
 app.get("/campgrounds/new" , function(req, res) {
